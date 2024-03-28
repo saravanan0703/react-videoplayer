@@ -1,54 +1,51 @@
-// Playlist.js
-import React, { useRef, useState, useEffect } from 'react';
+// App.js
 
-const Playlist = ({ videos, onVideoSelect }) => {
-  const [thumbnails, setThumbnails] = useState([]);
+import React, { useState } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-  useEffect(() => {
-    const generateThumbnails = async () => {
-      const thumbnailList = await Promise.all(
-        videos.map(async (video) => {
-          const thumbnail = await captureThumbnail(video.src);
-          return thumbnail;
-        })
-      );
-      setThumbnails(thumbnailList);
-    };
+const initialItems = [
+  { id: 'item-1', content: 'Item 1' },
+  { id: 'item-2', content: 'Item 2' },
+  { id: 'item-3', content: 'Item 3' },
+];
 
-    generateThumbnails();
-  }, [videos]);
+const Testing = () => {
+  const [items, setItems] = useState(initialItems);
 
-  const captureThumbnail = (videoSrc) => {
-    return new Promise((resolve) => {
-      const video = document.createElement('video');
-      video.src = videoSrc;
-      video.currentTime = 1; // Seek to 1 second into the video
-      video.muted = true; // Mute the video to avoid audio playback
-      video.onloadeddata = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataURI = canvas.toDataURL('image/jpeg');
-        resolve(dataURI);
-      };
-    });
+  const onDragEnd = result => {
+    if (!result.destination) return;
+    
+    const reorderedItems = Array.from(items);
+    const [removed] = reorderedItems.splice(result.source.index, 1);
+    reorderedItems.splice(result.destination.index, 0, removed);
+    
+    setItems(reorderedItems);
   };
 
   return (
-    <div>
-      <h2>Playlist</h2>
-      <div className="preview-list">
-        {thumbnails.map((thumbnail, index) => (
-          <div key={index} onClick={() => onVideoSelect(videos[index])} className="preview-item">
-            <img src={thumbnail} alt={videos[index].title} />
-            <p>{videos[index].title}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(provided) => (
+          <ul {...provided.droppableProps} ref={provided.innerRef}>
+            {items.map((item, index) => (
+              <Draggable key={item.id} draggableId={item.id} index={index}>
+                {(provided) => (
+                  <p
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                  >
+                    {item.content}
+                  </p>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
 
-export default Playlist;
+export default Testing;

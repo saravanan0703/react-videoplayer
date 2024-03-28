@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 
 const Playlist = ({ videos, onVideoSelect }) => {
   const [thumbnails, setThumbnails] = useState([]);
-  const [selectedVideo, setSelectedVideo] = useState(null); // Define selectedVideo state
 
   useEffect(() => {
     const generateThumbnails = async () => {
-      const thumbnailList = await Promise.all(
-        videos.map(async (video) => {
-          const thumbnail = await captureThumbnail(video.src);
-          return thumbnail;
-        })
-      );
-      setThumbnails(thumbnailList);
+      try {
+        const thumbnailList = await Promise.all(
+          videos.map(async (video) => {
+            const thumbnail = await captureThumbnail(video.src);
+            return thumbnail;
+          })
+        );
+        setThumbnails(thumbnailList);
+      } catch (error) {
+        console.error('Error generating thumbnails:', error);
+      }
     };
 
     generateThumbnails();
@@ -22,8 +25,8 @@ const Playlist = ({ videos, onVideoSelect }) => {
     return new Promise((resolve) => {
       const video = document.createElement('video');
       video.src = videoSrc;
-      video.currentTime = 1; // Seek to 1 second into the video
-      video.muted = true; // Mute the video to avoid audio playback
+      video.currentTime = 1;
+      video.muted = true;
       video.onloadeddata = () => {
         const canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
@@ -32,6 +35,10 @@ const Playlist = ({ videos, onVideoSelect }) => {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataURI = canvas.toDataURL('image/jpeg');
         resolve(dataURI);
+      };
+      video.onerror = (error) => {
+        console.error('Error loading video:', error);
+        resolve(''); // Return empty string if thumbnail generation fails
       };
     });
   };
@@ -43,13 +50,10 @@ const Playlist = ({ videos, onVideoSelect }) => {
         {thumbnails.map((thumbnail, index) => (
           <div
             key={index}
-            onClick={() => {
-              setSelectedVideo(videos[index]); // Set selectedVideo when clicked
-              onVideoSelect(videos[index]);
-            }}
-            className={`preview-item ${selectedVideo && selectedVideo.src === videos[index].src ? 'playing' : ''}`}
+            onClick={() => onVideoSelect(videos[index])}
+            className="preview-item"
           >
-            <img src={thumbnail} alt={videos[index].title} />
+            <img src={thumbnail} alt={`Thumbnail ${index}`} />
             <p>{videos[index].title}</p>
           </div>
         ))}
