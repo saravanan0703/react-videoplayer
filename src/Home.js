@@ -32,35 +32,38 @@ function Home() {
   };
 
   return (
-    <div className="Home">
+    <div className="Home h-screen text-white">
       {selectedVideo && <VideoPlayer video={selectedVideo} />}
-      <DragDropContext onDragEnd={handleVideoReorder}>
-        <Droppable droppableId="playlist" direction="horizontal">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={{ display: 'flex' , gap: '10px'  }}
-              className='container mx-auto'
-            >
-              {videos.map((video, index) => (
-                <Draggable key={video.id} draggableId={video.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      <PlaylistItem video={video} onSelect={handleVideoSelect} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <div className='container mx-auto'>
+        <h1 className='my-5 text-2xl'>Playlists</h1>
+        <DragDropContext onDragEnd={handleVideoReorder}>
+          <Droppable droppableId="playlist" direction="horizontal">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                
+                className='md:block xl:flex gap-8 container mx-auto'
+              >
+                {videos.map((video, index) => (
+                  <Draggable key={video.id} draggableId={video.id} index={index}>
+                    {(provided) => (
+                      <div
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                      >
+                        <PlaylistItem video={video} onSelect={handleVideoSelect} />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </div>
   );
 }
