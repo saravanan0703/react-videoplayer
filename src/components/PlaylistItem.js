@@ -42,7 +42,7 @@ const PlaylistItem = ({ video, onSelect }) => {
   };
 
   return (
-    <div onClick={() => onSelect(video)} className='xl:w-full m-auto block w-1/5 playlist-img my-6'>
+    <div onClick={() => onSelect(video)} className='xl:w-full m-auto block w-2/6 playlist-img my-6'>
       {/* Display the thumbnail with adjusted width and height */}
       {thumbnail && <img src={thumbnail} alt={video.title} style={{ width: '152px', height: 'auto' }} />}
       <p>{video.title}</p>
