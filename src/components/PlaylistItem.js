@@ -44,7 +44,7 @@ const PlaylistItem = ({ video, onSelect }) => {
   return (
     <div onClick={() => onSelect(video)}>
       {/* Display the thumbnail with adjusted width and height */}
-      {thumbnail && <img src={thumbnail} alt={video.title} style={{ width: '100px', height: 'auto' }} />}
+      {thumbnail && <img src={thumbnail} alt={video.title} style={{ width: '140px', height: 'auto' }} />}
       <p>{video.title}</p>
     </div>
   );

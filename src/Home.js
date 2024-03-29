@@ -8,7 +8,7 @@ import video2 from './videos/video2.mp4';
 import video3 from './videos/video3.mp4';
 import video4 from './videos/video4.mp4';
 
-function App() {
+function Home() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videos, setVideos] = useState([
     { id: 'video-1', title: 'Video 1', src: video1 },
@@ -32,7 +32,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="Home">
       {selectedVideo && <VideoPlayer video={selectedVideo} />}
       <DragDropContext onDragEnd={handleVideoReorder}>
         <Droppable droppableId="playlist" direction="horizontal">
@@ -40,7 +40,8 @@ function App() {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              style={{ display: 'flex' }}
+              style={{ display: 'flex' , gap: '10px'  }}
+              className='container mx-auto'
             >
               {videos.map((video, index) => (
                 <Draggable key={video.id} draggableId={video.id} index={index}>
@@ -66,4 +67,4 @@ function App() {
 
 
 
-export default App;
+export default Home;
