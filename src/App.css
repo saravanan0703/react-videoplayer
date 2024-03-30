@@ -1,4 +1,12 @@
 
+html {
+    background-color: black;
+}
+
 .playlist-img {
     background-color: 	#252b25;
+}
+
+.Home {
+    height: 110vh;
 }

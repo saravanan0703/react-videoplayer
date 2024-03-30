@@ -32,7 +32,7 @@ function Home() {
   };
 
   return (
-    <div className="Home h-screen text-white bg-black">
+    <div className="Home h-screen text-white">
       {selectedVideo && <VideoPlayer video={selectedVideo} />}
       <div className='container mx-auto'>
         <h1 className='my-5 text-2xl'>Playlists</h1>
